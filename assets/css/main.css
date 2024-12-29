@@ -637,6 +637,42 @@ section,
   line-height: 0;
 }
 
+/* Container for the image and rotating border */
+.border-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Image styling */
+.rounded-image {
+    border-radius: 25px;
+    display: block; /* Ensures the image takes up space */
+}
+
+/* Rotating border styling */
+.rotating-border {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 25px; /* Matches the image's border radius */
+    border: 4px solid rgba(0, 0, 0, 0.3);
+    animation: rotateBorder 10s linear infinite; /* Rotation animation */
+    pointer-events: none; /* Prevents the border from interfering with image interactions */
+}
+
+/* Keyframes for rotating the border */
+@keyframes rotateBorder {
+    0% {
+        transform: rotate(0deg); /* Start at 0 degrees */
+    }
+
+    100% {
+        transform: rotate(360deg); /* Complete a full rotation */
+    }
+}
+
 /*--------------------------------------------------------------
 # Stats Section
 --------------------------------------------------------------*/
