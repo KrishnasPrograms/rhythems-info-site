@@ -658,18 +658,18 @@ section,
     bottom: -4px;
     border-radius: 25px; /* Matches the image's border radius */
     border: 4px solid rgba(0, 0, 0, 0.3);
-    animation: rotateBorder 10s linear infinite; /* Rotation animation */
+    animation: pulseBorder 3s linear infinite; /* New animation for size increase */
     pointer-events: none; /* Prevents the border from interfering with image interactions */
 }
 
-/* Keyframes for rotating the border */
-@keyframes rotateBorder {
-    0% {
-        transform: rotate(0deg); /* Start at 0 degrees */
+/* Keyframes for pulsing the border size */
+@keyframes pulseBorder {
+    0%, 100% {
+        transform: scale(1); /* Original size */
     }
 
-    100% {
-        transform: rotate(360deg); /* Complete a full rotation */
+    50% {
+        transform: scale(1.02); /* Increased size */
     }
 }
 
