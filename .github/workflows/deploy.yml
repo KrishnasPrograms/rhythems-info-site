@@ -1,0 +1,24 @@
+name: Deploy Website
+
+# Specify when the workflow should trigger
+on:
+  push:
+    branches:
+      - main  # Triggers on a push to the 'main' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+
+    steps:
+      # Step 1: Check out the code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Example of deploying a website or running a command
+      - name: Deploy Website
+        env:
+          API_KEY: ${{ secrets.API_KEY }}  # Inject the API key secret
+        run: |
+          echo "Deploying with API_KEY=$API_KEY"
+          # Add your deployment commands here, e.g., copying files or triggering a deploy
