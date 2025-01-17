@@ -550,6 +550,7 @@
     messageButton.addEventListener("click", (e) => {
         messageBox.classList.toggle("hidden");
         e.stopPropagation(); // Prevent click from propagating to the document
+        messageButton.blur(); // Remove focus from the button
     });
 
   // Close the message box if clicking outside of it
