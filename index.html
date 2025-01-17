@@ -472,6 +472,25 @@
   <!-- Preloader -->
   <div id="preloader"></div>
 
+  <!-- Chat Icon -->
+<div id="message-widget">
+    <div id="message-button">💬</div>
+
+    <!-- Message Form -->
+    <div id="message-box" class="hidden">
+        <label for="user-name">Name:</label>
+        <input type="text" id="user-name" placeholder="Your Name" required>
+
+        <label for="user-contact">Contact:</label>
+        <input type="text" id="user-contact" placeholder="Your Email or Phone" required>
+
+        <label for="user-message">Message:</label>
+        <textarea id="user-message" placeholder="Type your message..." required></textarea>
+
+        <button id="send-message">Send Message</button>
+    </div>
+</div>
+
   <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
