@@ -487,6 +487,87 @@
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
 
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-database.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDzFMWiL243KcCXiavCWGP6WFgQDvCB0aw",
+        authDomain: "resumesitemessage.firebaseapp.com",
+        databaseURL: "https://resumesitemessage-default-rtdb.firebaseio.com",
+        projectId: "resumesitemessage",
+        storageBucket: "resumesitemessage.firebasestorage.app",
+        messagingSenderId: "171571362385",
+        appId: "1:171571362385:web:9d256e0b0e52c769f15670"
+    };
+
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // Interactivity
+    const messageButton = document.getElementById("message-button");
+    const messageBox = document.getElementById("message-box");
+    const sendMessageButton = document.getElementById("send-message");
+    const userNameInput = document.getElementById("user-name");
+    const userContactInput = document.getElementById("user-contact");
+    const userMessageInput = document.getElementById("user-message");
+
+    // Function to format the timestamp in dd/mm/yyyy hh:mm:ss format
+    function formatTimestamp(timestamp) {
+        const date = new Date(timestamp);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+
+        return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    }
+
+    messageButton.addEventListener("click", () => {
+        messageBox.classList.toggle("hidden");
+    });
+
+    sendMessageButton.addEventListener("click", () => {
+        const userName = userNameInput.value.trim();
+        const userContact = userContactInput.value.trim();
+        const userMessage = userMessageInput.value.trim();
+
+        if (userName && userContact && userMessage) {
+            // Get current timestamp and format it
+            const formattedTimestamp = formatTimestamp(Date.now());
+            push(ref(database, "messages"), {
+                name: userName,
+                contact: userContact,
+                message: userMessage,
+                timestamp: formattedTimestamp,
+            })
+                .then(() => {
+                    userNameInput.value = ""; // Clear inputs
+                    userContactInput.value = "";
+                    userMessageInput.value = "";
+                    messageBox.classList.toggle("hidden");
+                    setTimeout(() => {
+                        alert("Message sent successfully!");
+                    }, 10); // Slight delay for smooth UI experience
+                })
+                .catch((error) => {
+                    console.error("Error saving message:", error);
+                    alert("Failed to send message. Please try again.");
+                });
+        } else {
+            alert("Please fill out all fields before sending.");
+        }
+    });
+</script>
+
+
+  
+
 </body>
 
 </html>
