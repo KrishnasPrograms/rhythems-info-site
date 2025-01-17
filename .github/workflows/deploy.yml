@@ -3,20 +3,26 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Trigger on push to the 'main' branch
+      - main  # Trigger the workflow when changes are pushed to the main branch
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Run the deployment on the latest Ubuntu environment
 
     steps:
-      # Step 1: Check out the repository
+      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Deploy to GitHub Pages
+      # Step 2: Set up Git user information
+      - name: Set up Git user
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      # Step 3: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./  # Adjust this to your build output folder
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # This provides the necessary authentication token
+          publish_dir: ./   # Publish all files from the root directory
