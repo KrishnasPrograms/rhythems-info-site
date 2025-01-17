@@ -25,4 +25,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}  # This provides the necessary authentication token
-          publish_dir: ./   # Publish all files from the root directory
+          publish_dir: ./    #Publish all files from the root directory
