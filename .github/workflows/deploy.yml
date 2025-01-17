@@ -24,7 +24,7 @@ jobs:
       - name: Inject API Key into the code
         run: |
           # Replace the placeholder with your actual Firebase API key
-          sed -i 's|process.env.API_KEY|${{ secrets.API_KEY }}|' ./index.html          
+          sed -i 's|YOUR_API_KEY|${{ secrets.API_KEY }}|' ./index.html          
 
       # Step 3: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
