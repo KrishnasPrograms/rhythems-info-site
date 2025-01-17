@@ -1407,10 +1407,6 @@ section,
     }
 }
 
-#message-button:focus {
-    outline: none;
-}
-
 .hidden {
     display: none;
 }
