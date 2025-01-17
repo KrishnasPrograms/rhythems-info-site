@@ -20,6 +20,12 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+      # Step 3: Inject Firebase API Key into the code
+      - name: Inject API Key into the code
+        run: |
+          # Replace the placeholder with your actual Firebase API key
+          sed -i 's|process.env.API_KEY|${{ secrets.API_KEY }}|' ./index.html          
+
       # Step 3: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
