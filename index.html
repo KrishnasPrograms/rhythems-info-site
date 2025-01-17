@@ -547,8 +547,16 @@
         return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
     }
 
-    messageButton.addEventListener("click", () => {
+    messageButton.addEventListener("click", (e) => {
         messageBox.classList.toggle("hidden");
+        e.stopPropagation(); // Prevent click from propagating to the document
+    });
+
+  // Close the message box if clicking outside of it
+    document.addEventListener("click", (e) => {
+        if (!messageBox.classList.contains("hidden") && !messageBox.contains(e.target) && e.target !== messageButton) {
+            messageBox.classList.add("hidden");
+        }
     });
 
     sendMessageButton.addEventListener("click", () => {
