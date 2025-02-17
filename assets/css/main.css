@@ -984,6 +984,42 @@ section,
   font-size: 14px;
 }
 
+
+
+/*certifications section*/
+
+.service-card {
+  transition: transform 0.4s ease;
+}
+
+.service-card:hover {
+  transform: scale(1.04);
+}
+
+.service-card:active {
+  transform: scale(1.02);
+}
+
+.service-card:hover .title,
+    .service-card:hover .description,
+    .service-card:hover p {
+        filter: blur(2px);
+        transition: filter 0.4s ease;
+    }
+
+    .eye-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+
+    .service-card:hover .eye-icon {
+        opacity: 1;
+    }
+
 /*--------------------------------------------------------------
 # Testimonials Section
 --------------------------------------------------------------*/
