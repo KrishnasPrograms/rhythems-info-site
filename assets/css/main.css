@@ -664,13 +664,29 @@ section,
 
 /* Keyframes for pulsing the border size */
 @keyframes pulseBorder {
-    0%, 100% {
-        transform: scale(1); /* Original size */
-    }
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    border-color: #D4AF37; /* Luxurious Gold */
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.8); /* Soft gold glow */
+  }
 
-    50% {
-        transform: scale(1.02); /* Increased size */
-    }
+  25% {
+    border-color: #C0C0C0; /* Platinum Silver */
+    transform: scale(1.02) rotate(1deg);
+    box-shadow: 0 0 15px rgba(192, 192, 192, 0.9); /* Platinum glow */
+  }
+
+  50% {
+    border-color: #0F52BA; /* Deep Sapphire Blue */
+    transform: scale(1.04) rotate(-1deg);
+    box-shadow: 0 0 20px rgba(15, 82, 186, 0.85); /* Sapphire blue glow */
+  }
+
+  75% {
+    border-color: #800020; /* Rich Burgundy */
+    transform: scale(1.02) rotate(1deg);
+    box-shadow: 0 0 15px rgba(128, 0, 32, 0.9); /* Burgundy glow */
+  }
 }
 
 /*--------------------------------------------------------------
