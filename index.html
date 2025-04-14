@@ -545,12 +545,13 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
-    const visitKey = 'hasVisited';
-    const visitCountKey = 'visitCount';
+    //Beginning of Counting the devices and their visits
+    const visitKey = 'hasVisited';  // Track if the device has visited before
+    const deviceCountKey = 'deviceCount';  // Track the device count
 
     const now = new Date();
 
-    // Format IST timestamp
+    // Format the timestamp (day, hour, minute, and seconds)
     const year1 = now.getFullYear();
     const month1 = String(now.getMonth() + 1).padStart(2, '0');
     const day1 = String(now.getDate()).padStart(2, '0');
@@ -558,35 +559,46 @@
     const minutes1 = String(now.getMinutes()).padStart(2, '0');
     const seconds1 = String(now.getSeconds()).padStart(2, '0');
 
-    const timestamp = `${year1}-${month1}-${day1}T${hours1}-${minutes1}-${seconds1}_IST`;
+    const timestamp = `${year1}-${month1}-${day1}T${hours1}-${minutes1}-${seconds1}_IST`;  // e.g., 2025-04-14T21-11-09_IST
     const visitNodeKey = `new_visit_on_${timestamp}`;
+    const revisitNodeKey = `re_visit_on_${timestamp}`;
 
+    // Get current device count
+    let deviceCount = Number(localStorage.getItem(deviceCountKey)) || 0;
+
+    // Check if this device has visited before
     const hasVisited = localStorage.getItem(visitKey);
-    let visitCount = Number(localStorage.getItem(visitCountKey)) || 0;
 
     if (!hasVisited) {
-      // First-time visit: set the node with count 1
-      set(ref(database, 'visits/' + visitNodeKey), 1)
-        .then(() => {
-          localStorage.setItem(visitKey, 'true');
-          localStorage.setItem('visitCount', '1');
-          console.log('First visit logged.');
-        })
-        .catch(error => console.error('Error logging visit:', error));
-    } else {
-      // Revisit: increment the count
-      visitCount += 1;
-      localStorage.setItem('visitCount', String(visitCount));
-    
-      // Increment the existing node with the new count value
-      const visitRef = ref(database, 'visits/' + visitNodeKey);
-      update(visitRef, { [visitNodeKey]: visitCount })
-        .then(() => {
-          console.log(`Revisit #${visitCount} logged in the same node.`);
-        })
-        .catch(error => console.error('Error updating revisit count:', error));
-    }
+      // New device: Create a master node for the device
+      deviceCount += 1;
+      localStorage.setItem(deviceCountKey, deviceCount); // Store the new device count
+      localStorage.setItem(visitKey, 'true');  // Mark this device as having visited
 
+      // Create the master node for the device (device_<count>)
+      const deviceNodeRef = ref(database, `devices/device_${deviceCount}`);
+      set(deviceNodeRef, {});
+
+      // Create the first visit node (new_visit_on_<timestamp>)
+      const firstVisitRef = ref(database, `devices/device_${deviceCount}/${visitNodeKey}`);
+      set(firstVisitRef, 1)
+        .then(() => {
+          console.log('First visit logged for device_' + deviceCount);
+        })
+        .catch(error => console.error('Error logging first visit:', error));
+
+    } else {
+      // Revisiting device: Use the existing master node
+      const deviceNodeRef = ref(database, `devices/device_${deviceCount}`);
+
+      // Create the revisit node (re_visit_on_<timestamp>)
+      const revisitRef = ref(database, `devices/device_${deviceCount}/${revisitNodeKey}`);
+      set(revisitRef, 1)
+        .then(() => {
+          console.log('Revisit logged for device_' + deviceCount);
+        })
+        .catch(error => console.error('Error logging revisit:', error));
+    }
     //Ending of Count block
 
     // Interactivity
