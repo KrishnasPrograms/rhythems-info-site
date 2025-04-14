@@ -545,6 +545,25 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
+    //Counting visits everytime a new device opens this website
+    const visitKey = 'hasVisited';
+    const hasVisited = localStorage.getItem(visitKey);
+
+    if (!hasVisited) {
+      const now = new Date();
+      const timestamp = now.toISOString().replace(/:/g, '-');
+      const visitNodeKey = `new_visit_on_${timestamp}`;
+
+      set(ref(database, 'visits/' + visitNodeKey), 1)
+        .then(() => {
+          localStorage.setItem(visitKey, 'true');
+          console.log('Visit logged.');
+        })
+        .catch(error => console.error('Error logging visit:', error));
+    }
+
+    //Ending of Count block
+
     // Interactivity
     const messageButton = document.getElementById("message-button");
     const messageBox = document.getElementById("message-box");
