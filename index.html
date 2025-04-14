@@ -546,9 +546,17 @@
     const database = getDatabase(app);
 
     //Beginning of Counting the devices and their visits
-    const visitKey = 'hasVisited';  // Track if the device has visited before
-    const deviceCountKey = 'deviceCount';  // Track the device count
+    const visitKey = 'hasVisited';  // Track if this device has visited before
+    const assignedDeviceKey = 'assignedDeviceId';  // Store this device's assigned ID
+    const resetKey = 'resetDone';  // Used for one-time reset
 
+    // ✅ One-time localStorage reset (ONLY ONCE per device)
+    if (!localStorage.getItem(resetKey)) {
+      localStorage.removeItem(visitKey);
+      localStorage.removeItem(assignedDeviceKey);
+      localStorage.setItem(resetKey, 'true');
+    }
+  
     const now = new Date();
 
     // Format the timestamp (day, hour, minute, and seconds)
@@ -563,41 +571,34 @@
     const visitNodeKey = `new_visit_on_${timestamp}`;
     const revisitNodeKey = `re_visit_on_${timestamp}`;
 
-    // Get current device count
-    let deviceCount = Number(localStorage.getItem(deviceCountKey)) || 0;
-
-    // Check if this device has visited before
     const hasVisited = localStorage.getItem(visitKey);
+    const assignedDevice = localStorage.getItem(assignedDeviceKey);
 
-    if (!hasVisited) {
-      // New device: Create a master node for the device
-      deviceCount += 1;
-      localStorage.setItem(deviceCountKey, deviceCount); // Store the new device count
-      localStorage.setItem(visitKey, 'true');  // Mark this device as having visited
+    if (!hasVisited || !assignedDevice) {
+      // 🔍 First-time visit
+      const devicesRef = ref(database, 'devices');
+      get(devicesRef).then(snapshot => {
+        const count = snapshot.exists() ? snapshot.size : 0;
+        const deviceId = `device_${count}`;
 
-      // Create the master node for the device (device_<count>)
-      const deviceNodeRef = ref(database, `devices/device_${deviceCount}`);
-      set(deviceNodeRef, {});
+        localStorage.setItem(visitKey, 'true');
+        localStorage.setItem(assignedDeviceKey, deviceId);
 
-      // Create the first visit node (new_visit_on_<timestamp>)
-      const firstVisitRef = ref(database, `devices/device_${deviceCount}/${visitNodeKey}`);
-      set(firstVisitRef, 1)
-        .then(() => {
-          console.log('First visit logged for device_' + deviceCount);
-        })
-        .catch(error => console.error('Error logging first visit:', error));
+        const deviceNodeRef = ref(database, `devices/${deviceId}`);
+        set(deviceNodeRef, {})  // create base node
 
-    } else {
-      // Revisiting device: Use the existing master node
-      const deviceNodeRef = ref(database, `devices/device_${deviceCount}`);
-
-      // Create the revisit node (re_visit_on_<timestamp>)
-      const revisitRef = ref(database, `devices/device_${deviceCount}/${revisitNodeKey}`);
-      set(revisitRef, 1)
-        .then(() => {
-          console.log('Revisit logged for device_' + deviceCount);
-        })
-        .catch(error => console.error('Error logging revisit:', error));
+        const visitRef = ref(database, `devices/${deviceId}/${visitNodeKey}`);
+        set(visitRef, 1).then(() => {
+          console.log(`New visit logged under ${deviceId}`);
+        }).catch(err => console.error('Error logging first visit:', err));
+      });
+    } 
+    else {
+      // 🔁 Revisit
+      const revisitRef = ref(database, `devices/${assignedDevice}/${revisitNodeKey}`);
+      set(revisitRef, 1).then(() => {
+        console.log(`Revisit logged under ${assignedDevice}`);
+      }).catch(err => console.error('Error logging revisit:', err));
     }
     //Ending of Count block
 
