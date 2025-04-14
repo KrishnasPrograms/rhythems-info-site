@@ -588,7 +588,7 @@
         set(deviceNodeRef, {})  // create base node
 
         const visitRef = ref(database, `devices/${deviceId}/${visitNodeKey}`);
-        set(visitRef, 1).then(() => {
+        set(visitRef, {}).then(() => {
           console.log(`New visit logged under ${deviceId}`);
         }).catch(err => console.error('Error logging first visit:', err));
       });
@@ -596,7 +596,7 @@
     else {
       // 🔁 Revisit
       const revisitRef = ref(database, `devices/${assignedDevice}/${revisitNodeKey}`);
-      set(revisitRef, 1).then(() => {
+      set(revisitRef, {}).then(() => {
         console.log(`Revisit logged under ${assignedDevice}`);
       }).catch(err => console.error('Error logging revisit:', err));
     }
