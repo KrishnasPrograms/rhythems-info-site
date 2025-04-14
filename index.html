@@ -546,60 +546,60 @@
     const database = getDatabase(app);
 
     //Beginning of Counting the devices and their visits
-    const visitKey = 'hasVisited';  // Track if this device has visited before
-    const assignedDeviceKey = 'assignedDeviceId';  // Store this device's assigned ID
-    const resetKey = 'resetDone';  // Used for one-time reset
+    // const visitKey = 'hasVisited';  // Track if this device has visited before
+    // const assignedDeviceKey = 'assignedDeviceId';  // Store this device's assigned ID
+    // const resetKey = 'resetDone';  // Used for one-time reset
 
-    // ✅ One-time localStorage reset (ONLY ONCE per device)
-    if (!localStorage.getItem(resetKey)) {
-      localStorage.removeItem(visitKey);
-      localStorage.removeItem(assignedDeviceKey);
-      localStorage.setItem(resetKey, 'true');
-    }
+    // // ✅ One-time localStorage reset (ONLY ONCE per device)
+    // if (!localStorage.getItem(resetKey)) {
+    //   localStorage.removeItem(visitKey);
+    //   localStorage.removeItem(assignedDeviceKey);
+    //   localStorage.setItem(resetKey, 'true');
+    // }
   
-    const now = new Date();
+    // const now = new Date();
 
-    // Format the timestamp (day, hour, minute, and seconds)
-    const year1 = now.getFullYear();
-    const month1 = String(now.getMonth() + 1).padStart(2, '0');
-    const day1 = String(now.getDate()).padStart(2, '0');
-    const hours1 = String(now.getHours()).padStart(2, '0');
-    const minutes1 = String(now.getMinutes()).padStart(2, '0');
-    const seconds1 = String(now.getSeconds()).padStart(2, '0');
+    // // Format the timestamp (day, hour, minute, and seconds)
+    // const year1 = now.getFullYear();
+    // const month1 = String(now.getMonth() + 1).padStart(2, '0');
+    // const day1 = String(now.getDate()).padStart(2, '0');
+    // const hours1 = String(now.getHours()).padStart(2, '0');
+    // const minutes1 = String(now.getMinutes()).padStart(2, '0');
+    // const seconds1 = String(now.getSeconds()).padStart(2, '0');
 
-    const timestamp = `${year1}-${month1}-${day1}T${hours1}-${minutes1}-${seconds1}_IST`;  // e.g., 2025-04-14T21-11-09_IST
-    const visitNodeKey = `new_visit_on_${timestamp}`;
-    const revisitNodeKey = `re_visit_on_${timestamp}`;
+    // const timestamp = `${year1}-${month1}-${day1}T${hours1}-${minutes1}-${seconds1}_IST`;  // e.g., 2025-04-14T21-11-09_IST
+    // const visitNodeKey = `new_visit_on_${timestamp}`;
+    // const revisitNodeKey = `re_visit_on_${timestamp}`;
 
-    const hasVisited = localStorage.getItem(visitKey);
-    const assignedDevice = localStorage.getItem(assignedDeviceKey);
+    // const hasVisited = localStorage.getItem(visitKey);
+    // const assignedDevice = localStorage.getItem(assignedDeviceKey);
 
-    if (!hasVisited || !assignedDevice) {
-      // 🔍 First-time visit
-      const devicesRef = ref(database, 'devices');
-      get(devicesRef).then(snapshot => {
-        const count = snapshot.exists() ? snapshot.size : 0;
-        const deviceId = `device_${count}`;
+    // if (!hasVisited || !assignedDevice) {
+    //   // 🔍 First-time visit
+    //   const devicesRef = ref(database, 'devices');
+    //   get(devicesRef).then(snapshot => {
+    //     const count = snapshot.exists() ? snapshot.size : 0;
+    //     const deviceId = `device_${count}`;
 
-        localStorage.setItem(visitKey, 'true');
-        localStorage.setItem(assignedDeviceKey, deviceId);
+    //     localStorage.setItem(visitKey, 'true');
+    //     localStorage.setItem(assignedDeviceKey, deviceId);
 
-        const deviceNodeRef = ref(database, `devices/${deviceId}`);
-        set(deviceNodeRef, {})  // create base node
+    //     const deviceNodeRef = ref(database, `devices/${deviceId}`);
+    //     set(deviceNodeRef, {})  // create base node
 
-        const visitRef = ref(database, `devices/${deviceId}/${visitNodeKey}`);
-        set(visitRef, true).then(() => {
-          console.log(`New visit logged under ${deviceId}`);
-        }).catch(err => console.error('Error logging first visit:', err));
-      });
-    } 
-    else {
-      // 🔁 Revisit
-      const revisitRef = ref(database, `devices/${assignedDevice}/${revisitNodeKey}`);
-      set(revisitRef, true).then(() => {
-        console.log(`Revisit logged under ${assignedDevice}`);
-      }).catch(err => console.error('Error logging revisit:', err));
-    }
+    //     const visitRef = ref(database, `devices/${deviceId}/${visitNodeKey}`);
+    //     set(visitRef, true).then(() => {
+    //       console.log(`New visit logged under ${deviceId}`);
+    //     }).catch(err => console.error('Error logging first visit:', err));
+    //   });
+    // } 
+    // else {
+    //   // 🔁 Revisit
+    //   const revisitRef = ref(database, `devices/${assignedDevice}/${revisitNodeKey}`);
+    //   set(revisitRef, true).then(() => {
+    //     console.log(`Revisit logged under ${assignedDevice}`);
+    //   }).catch(err => console.error('Error logging revisit:', err));
+    // }
     //Ending of Count block
 
     // Interactivity
