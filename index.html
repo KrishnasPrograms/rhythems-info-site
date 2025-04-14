@@ -565,25 +565,26 @@
     let visitCount = Number(localStorage.getItem(visitCountKey)) || 0;
 
     if (!hasVisited) {
-      // First-time visitor
+      // First-time visit: set the node with count 1
       set(ref(database, 'visits/' + visitNodeKey), 1)
         .then(() => {
           localStorage.setItem(visitKey, 'true');
-          localStorage.setItem(visitCountKey, '1');
+          localStorage.setItem('visitCount', '1');
           console.log('First visit logged.');
         })
         .catch(error => console.error('Error logging visit:', error));
     } else {
-      // Revisit — increment counter
+      // Revisit: increment the count
       visitCount += 1;
-      localStorage.setItem(visitCountKey, String(visitCount));
-      const reVisitRef = ref(database, `revisits/device_visit_${visitCount}`);
-      set(reVisitRef, {
-        timestamp: timestamp,
-        count: visitCount
-      }).then(() => {
-        console.log(`Revisit #${visitCount} logged.`);
-      }).catch(error => console.error('Error logging revisit:', error));
+      localStorage.setItem('visitCount', String(visitCount));
+    
+      // Increment the existing node with the new count value
+      const visitRef = ref(database, 'visits/' + visitNodeKey);
+      update(visitRef, { [visitNodeKey]: visitCount })
+        .then(() => {
+          console.log(`Revisit #${visitCount} logged in the same node.`);
+        })
+        .catch(error => console.error('Error updating revisit count:', error));
     }
 
     //Ending of Count block
